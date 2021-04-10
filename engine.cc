@@ -70,6 +70,7 @@ public:
     }
 
 private:
+    // Test
     std::list<Line2D> lines;
 };
 
