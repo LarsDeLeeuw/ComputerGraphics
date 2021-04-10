@@ -2,25 +2,109 @@
 #include "ini_configuration.h"
 
 #include <fstream>
+#include <chrono>
 #include <iostream>
 #include <stdexcept>
 #include <string>
+#include <list>
+#include <cmath>
 
+class Point2D{
+public:
+    Point2D(double x_input, double y_input){
+        x = x_input;
+        y = y_input;
+    }
+    Point2D(){
+
+    }
+    double x;
+    double y;
+};
+
+class Line2D{
+public:
+    Line2D(Point2D& start, Point2D &end, img::Color& colour){
+        x0 = start;
+        x1 = end;
+        color = colour;
+    }
+    Point2D x0;
+    Point2D x1;
+    img::Color color;
+};
+
+class Lines2D{
+public:
+    Lines2D(){
+
+    }
+    ~Lines2D(){
+
+    }
+    void addLine(Line2D& newLine){
+        lines.push_back(newLine);
+    }
+    std::list<Line2D> getLines(){
+        return lines;
+    }
+    img::EasyImage& drawLines(const int size, const std::vector<int> backgroundcolor){
+        img::Color background = img::Color(255**(backgroundcolor.begin()), 255**(backgroundcolor.begin() + 1), 255**(backgroundcolor.begin() + 2));
+        int largestX = lines.begin()->x1.x;
+        int smallestX = lines.begin()->x0.x;
+        int largestY = lines.begin()->x1.y;
+        int smallestY = lines.begin()->x0.y;
+        for(auto i: lines){
+            if(i.x0.x < smallestX)smallestX = i.x0.x;
+            if(i.x0.y < smallestY)smallestY = i.x0.y;
+            if(i.x1.x > largestX)largestX = i.x1.x;
+            if(i.x1.y > largestY)largestY = i.x1.y;
+        }
+        int xrange = std::abs(largestX) + std::abs(smallestX); int yrange = std::abs(largestY) + std::abs(smallestY);
+        img::EasyImage* image = new img::EasyImage(size*((xrange)/std::max(xrange, yrange)), size*((yrange)/std::max(xrange, yrange)), background);
+        double scale = 0.95*image->get_width()/xrange;
+        for(auto i : lines){
+            image->draw_line(scale*i.x0.x, scale*i.x0.y, scale*i.x1.x, scale*i.x1.y, i.color);
+        }
+        return *image;
+    }
+
+private:
+    std::list<Line2D> lines;
+};
 
 
 img::EasyImage generate_image(const ini::Configuration &configuration)
 {
-	return img::EasyImage();
+    img::EasyImage image;
+    Point2D* zero = new Point2D(0, 0);
+    Point2D* upperleft = new Point2D(0, 42);
+    Point2D* upperright = new Point2D(42, 42);
+    Point2D* lowerright = new Point2D(42, 0);
+    img::Color* white = new img::Color(0, 0, 0);
+    img::Color* black = new img::Color(1,1,1);
+    Line2D* line1 = new Line2D(*zero, *upperright, *black);
+    Line2D* line2 = new Line2D(*upperleft, *lowerright, *black);
+    if(configuration["General"]["type"].as_string_or_die() == "2DLSystem"){
+        Lines2D* LSystemLines = new Lines2D();
+        LSystemLines->addLine(*line1);
+        LSystemLines->addLine(*line2);
+        image = LSystemLines->drawLines(configuration["General"]["size"], configuration["General"]["backgroundcolor"].as_int_tuple_or_die());
+    }
+	return image;
 }
+
+
 
 int main(int argc, char const* argv[])
 {
+        auto start = std::chrono::high_resolution_clock::now();
         int retVal = 0;
         try
         {
                 std::vector<std::string> args = std::vector<std::string>(argv+1, argv+argc);
                 if (args.empty()) {
-                        std::ifstream fileIn("filelist");
+                        std::ifstream fileIn("2DLsystems/filelist");
                         std::string fileName;
                         while (std::getline(fileIn, fileName)) {
                                 args.push_back(fileName);
@@ -83,5 +167,9 @@ int main(int argc, char const* argv[])
                 std::cerr << "Error: insufficient memory" << std::endl;
                 retVal = 100;
         }
+        auto stop = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::milliseconds >(stop - start);
+
+        std::cout << duration.count() << std::endl;
         return retVal;
 }
