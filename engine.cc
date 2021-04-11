@@ -78,19 +78,8 @@ private:
 img::EasyImage generate_image(const ini::Configuration &configuration)
 {
     img::EasyImage image;
-    Point2D* zero = new Point2D(0, 0);
-    Point2D* upperleft = new Point2D(0, 42);
-    Point2D* upperright = new Point2D(42, 42);
-    Point2D* lowerright = new Point2D(42, 0);
-    img::Color* white = new img::Color(0, 0, 0);
-    img::Color* black = new img::Color(1,1,1);
-    Line2D* line1 = new Line2D(*zero, *upperright, *black);
-    Line2D* line2 = new Line2D(*upperleft, *lowerright, *black);
     if(configuration["General"]["type"].as_string_or_die() == "2DLSystem"){
-        Lines2D* LSystemLines = new Lines2D();
-        LSystemLines->addLine(*line1);
-        LSystemLines->addLine(*line2);
-        image = LSystemLines->drawLines(configuration["General"]["size"], configuration["General"]["backgroundcolor"].as_int_tuple_or_die());
+
     }
 	return image;
 }
