@@ -38,13 +38,14 @@ public:
         int xrange = std::abs(largestX) + std::abs(smallestX); int yrange = std::abs(largestY) + std::abs(smallestY);
         img::EasyImage* image = new img::EasyImage(size*((xrange)/std::max(xrange, yrange)), size*((yrange)/std::max(xrange, yrange)), backgroundcolor);
         double scale = 0.95*image->get_width()/xrange;
+        double DCx = scale*(smallestX + largestX)/2;
+        double DCy = scale*(smallestY + largestY)/2;
+        double dx = image->get_width()/2 - DCx;
+        double dy = image->get_height()/2 -DCy;
         for(auto i : lines){
-            if(i.x1.x*scale >= 1000 || i.x1.y*scale >= 1000){
-                continue;
-            }
             if(smallestX < 0 && smallestY < 0) {
-                image->draw_line(scale * (i.x0.x + (-1 * (smallestX))), scale * (i.x0.y + (-1 * smallestY)),
-                                 scale * (i.x1.x + (-1 * (smallestX))), scale * (i.x1.y + (-1 * smallestY)), i.color);
+                image->draw_line(dx + scale * (i.x0.x), dy + scale * (i.x0.y),
+                                 dx + scale * (i.x1.x), dy + scale * (i.x1.y), i.color);
             }
         }
 
