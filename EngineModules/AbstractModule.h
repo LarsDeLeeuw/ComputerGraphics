@@ -8,11 +8,13 @@
  * This class serves as an abstract object for the other modules to inherit from.
  */
 class AbstractModule {
+public:
     AbstractModule(){}
     ~AbstractModule(){}
 
-    virtual img::EasyImage calculateFrame(){
-        return img::EasyImage();
+    virtual img::EasyImage& calculateFrame(){
+        img::EasyImage* image = new img::EasyImage();
+        return *image;
     }
 };
 

@@ -1,5 +1,6 @@
 #include "easy_image.h"
 #include "ini_configuration.h"
+#include "EngineModules/_2DLSystemModule.h"
 
 #include <fstream>
 #include <chrono>
@@ -15,7 +16,8 @@ img::EasyImage generate_image(const ini::Configuration &configuration)
 {
     img::EasyImage image;
     if(configuration["General"]["type"].as_string_or_die() == "2DLSystem"){
-
+        _2DLSystemModule module = _2DLSystemModule(configuration);
+        image = module.calculateFrame();
     }
 	return image;
 }

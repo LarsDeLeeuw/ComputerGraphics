@@ -162,7 +162,7 @@ img::EasyImage::EasyImage(EasyImage const& img) :
 
 img::EasyImage::~EasyImage()
 {
-	bitmap.clear();
+    	bitmap.clear();
 }
 
 img::EasyImage& img::EasyImage::operator=(img::EasyImage const& img)

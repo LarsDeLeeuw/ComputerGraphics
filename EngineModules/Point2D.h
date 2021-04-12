@@ -11,6 +11,18 @@ public:
     Point2D(){
 
     }
+    double getX(){
+        return x;
+    }
+    double getY(){
+        return y;
+    }
+    void setX(double new_x){
+        x = new_x;
+    }
+    void setY(double new_y){
+        y = new_y;
+    }
     double x;
     double y;
 };
