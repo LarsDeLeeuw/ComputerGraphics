@@ -6,7 +6,7 @@
 
 
 double dMod(double x, double y){
-    // Small functions that returns mod of doubles, with y > 0.
+    // Small function that returns mod of doubles, with y > 0.
     if(x <= 0){
         x *= -1;
         if(x < y)return -1*x;
@@ -35,8 +35,8 @@ _2DLSystemModule::_2DLSystemModule(const ini::Configuration &configuration) {
     iterations = LSystem.get_nr_iterations();
     initiator = LSystem.get_initiator();
     size = configuration["General"]["size"].as_int_or_die();
-    backgroundcolor = img::Color(255*configuration["General"]["backgroundcolor"].as_int_tuple_or_die()[0], 255*configuration["General"]["backgroundcolor"].as_int_tuple_or_die()[1], 255*configuration["General"]["backgroundcolor"].as_int_tuple_or_die()[2]);
-    color = img::Color(255*configuration["2DLSystem"]["color"].as_int_tuple_or_die()[0], 255*configuration["2DLSystem"]["color"].as_int_tuple_or_die()[1], 255*configuration["2DLSystem"]["color"].as_int_tuple_or_die()[2]);
+    backgroundcolor = img::Color(255*configuration["General"]["backgroundcolor"].as_double_tuple_or_die()[0], 255*configuration["General"]["backgroundcolor"].as_double_tuple_or_die()[1], 255*configuration["General"]["backgroundcolor"].as_double_tuple_or_die()[2]);
+    color = img::Color(255*configuration["2DLSystem"]["color"].as_double_tuple_or_die()[0], 255*configuration["2DLSystem"]["color"].as_double_tuple_or_die()[1], 255*configuration["2DLSystem"]["color"].as_double_tuple_or_die()[2]);
     getString(LSystem, initiator);
     for(char symbol : statement){
         if(alphabet.find(symbol) != alphabet.end()){
