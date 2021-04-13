@@ -25,14 +25,18 @@ public:
             img::EasyImage* image = new img::EasyImage();
             return *image;
         }
-        int largestX = lines.begin()->x1.x;
-        int smallestX = lines.begin()->x0.x;
-        int largestY = lines.begin()->x1.y;
-        int smallestY = lines.begin()->x0.y;
+        double largestX = lines.begin()->x1.x;
+        double smallestX = lines.begin()->x0.x;
+        double largestY = lines.begin()->x1.y;
+        double smallestY = lines.begin()->x0.y;
         for(auto i: lines){
             if(i.x0.x < smallestX)smallestX = i.x0.x;
+            if(i.x1.x < smallestX)smallestX = i.x1.x;
             if(i.x0.y < smallestY)smallestY = i.x0.y;
+            if(i.x1.y < smallestY)smallestY = i.x1.y;
+            if(i.x0.x > largestX)largestX = i.x0.x;
             if(i.x1.x > largestX)largestX = i.x1.x;
+            if(i.x0.y > largestY)largestY = i.x0.y;
             if(i.x1.y > largestY)largestY = i.x1.y;
         }
         double xrange = std::abs(largestX) + std::abs(smallestX); double yrange = std::abs(largestY) + std::abs(smallestY);
@@ -43,7 +47,6 @@ public:
         double dx = image->get_width()/2 - DCx;
         double dy = image->get_height()/2 -DCy;
         for(auto i : lines){
-
                 image->draw_line(dx + scale * (i.x0.x), dy + scale * (i.x0.y),
                                  dx + scale * (i.x1.x), dy + scale * (i.x1.y), i.color);
 

@@ -1,6 +1,7 @@
 #include <fstream>
 #define _USE_MATH_DEFINES
 #include <cmath>
+#include <stack>
 #include "_2DLSystemModule.h"
 #include "../l_parser.h"
 
@@ -38,6 +39,8 @@ _2DLSystemModule::_2DLSystemModule(const ini::Configuration &configuration) {
     backgroundcolor = img::Color(255*configuration["General"]["backgroundcolor"].as_double_tuple_or_die()[0], 255*configuration["General"]["backgroundcolor"].as_double_tuple_or_die()[1], 255*configuration["General"]["backgroundcolor"].as_double_tuple_or_die()[2]);
     color = img::Color(255*configuration["2DLSystem"]["color"].as_double_tuple_or_die()[0], 255*configuration["2DLSystem"]["color"].as_double_tuple_or_die()[1], 255*configuration["2DLSystem"]["color"].as_double_tuple_or_die()[2]);
     getString(LSystem, initiator);
+    std::stack<std::pair<Point2D, double>> st;
+    std::pair<Point2D, double> stor;
     for(char symbol : statement){
         if(alphabet.find(symbol) != alphabet.end()){
             if(LSystem.draw(symbol)){
@@ -62,6 +65,15 @@ _2DLSystemModule::_2DLSystemModule(const ini::Configuration &configuration) {
                 case '-':
                     alpha -= delta;
                     alpha = dMod(alpha, 2*M_PI);
+                    break;
+                case '(':
+                    st.push(std::pair<Point2D, double>(currentpoint, alpha));
+                    break;
+                case ')':
+                    stor = st.top();
+                    st.pop();
+                    currentpoint = stor.first;
+                    alpha = stor.second;
                     break;
                 default:
                     break;
