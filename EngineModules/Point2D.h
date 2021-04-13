@@ -9,7 +9,8 @@ public:
         y = y_input;
     }
     Point2D(){
-
+        x = 0;
+        y = 0;
     }
     double getX(){
         return x;

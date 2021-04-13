@@ -2,6 +2,7 @@
 #define ENGINE_LINES2D_H
 
 #include<list>
+#include<cmath>
 
 #include "Line2D.h"
 
@@ -39,7 +40,7 @@ public:
             if(i.x0.y > largestY)largestY = i.x0.y;
             if(i.x1.y > largestY)largestY = i.x1.y;
         }
-        double xrange = std::abs(largestX) + std::abs(smallestX); double yrange = std::abs(largestY) + std::abs(smallestY);
+        double xrange = std::fabs(largestX) + std::fabs(smallestX); double yrange = std::fabs(largestY) + std::fabs(smallestY);
         img::EasyImage* image = new img::EasyImage(size*((xrange)/std::max(xrange, yrange)), size*((yrange)/std::max(xrange, yrange)), backgroundcolor);
         double scale = 0.95*image->get_width()/xrange;
         double DCx = scale*(smallestX + largestX)/2;
