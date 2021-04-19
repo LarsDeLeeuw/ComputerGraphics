@@ -15,9 +15,12 @@
 img::EasyImage generate_image(const ini::Configuration &configuration)
 {
     img::EasyImage image;
+    img::EasyImage* to_destroy;
     if(configuration["General"]["type"].as_string_or_die() == "2DLSystem"){
         _2DLSystemModule module = _2DLSystemModule(configuration);
-        image = module.calculateFrame();
+        to_destroy = module.calculateFrame();
+        image = *to_destroy;
+        delete to_destroy;
     }
 	return image;
 }

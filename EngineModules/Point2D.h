@@ -12,6 +12,9 @@ public:
         x = 0;
         y = 0;
     }
+
+    ~Point2D() = default;
+
     double getX(){
         return x;
     }

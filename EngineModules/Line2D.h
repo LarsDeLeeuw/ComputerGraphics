@@ -8,12 +8,16 @@
 class Line2D {
 public:
     Line2D(Point2D& start, Point2D &end, img::Color& colour){
-        x0 = start;
-        x1 = end;
+        x0 = &start;
+        x1 = &end;
         color = colour;
     }
-    Point2D x0;
-    Point2D x1;
+    ~Line2D(){
+     delete x0;
+     delete x1;
+    }
+    Point2D* x0;
+    Point2D* x1;
     img::Color color;
 };
 

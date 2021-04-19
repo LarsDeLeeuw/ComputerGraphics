@@ -13,7 +13,7 @@ class _2DLSystemModule : public AbstractModule{
 public:
     explicit _2DLSystemModule(const ini::Configuration &configuration);
     ~_2DLSystemModule();
-    img::EasyImage& calculateFrame() override;
+    img::EasyImage* calculateFrame() override;
 private:
     std::string& getString(const LParser::LSystem2D &LSystem, std::string& replacedstring, int nriterations = 0);
     double alpha;

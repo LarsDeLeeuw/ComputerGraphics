@@ -12,9 +12,9 @@ public:
     AbstractModule(){}
     ~AbstractModule(){}
 
-    virtual img::EasyImage& calculateFrame(){
+    virtual img::EasyImage* calculateFrame(){
         img::EasyImage* image = new img::EasyImage();
-        return *image;
+        return image;
     }
 };
 

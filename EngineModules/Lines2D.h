@@ -3,6 +3,7 @@
 
 #include<list>
 #include<cmath>
+#include <chrono>
 
 #include "Line2D.h"
 
@@ -12,52 +13,22 @@ public:
 
     }
     ~Lines2D(){
-
+        for(auto i: lines){
+            delete i;
+        }
     }
     void addLine(Line2D& newLine){
-        lines.push_back(newLine);
+        lines.push_back(&newLine);
     }
-    std::list<Line2D> getLines(){
+    std::list<Line2D*> getLines(){
         return lines;
     }
-    img::EasyImage& drawLines(const int size, const img::Color backgroundcolor){
-        if(lines.size()==0){
-            std::cout << "There were no lines to draw";
-            img::EasyImage* image = new img::EasyImage();
-            return *image;
-        }
-        double largestX = lines.begin()->x1.x;
-        double smallestX = lines.begin()->x0.x;
-        double largestY = lines.begin()->x1.y;
-        double smallestY = lines.begin()->x0.y;
-        for(auto i: lines){
-            if(i.x0.x < smallestX)smallestX = i.x0.x;
-            if(i.x1.x < smallestX)smallestX = i.x1.x;
-            if(i.x0.y < smallestY)smallestY = i.x0.y;
-            if(i.x1.y < smallestY)smallestY = i.x1.y;
-            if(i.x0.x > largestX)largestX = i.x0.x;
-            if(i.x1.x > largestX)largestX = i.x1.x;
-            if(i.x0.y > largestY)largestY = i.x0.y;
-            if(i.x1.y > largestY)largestY = i.x1.y;
-        }
-        double xrange = std::fabs(largestX) + std::fabs(smallestX); double yrange = std::fabs(largestY) + std::fabs(smallestY);
-        img::EasyImage* image = new img::EasyImage(size*((xrange)/std::max(xrange, yrange)), size*((yrange)/std::max(xrange, yrange)), backgroundcolor);
-        double scale = 0.95*image->get_width()/xrange;
-        double DCx = scale*(smallestX + largestX)/2;
-        double DCy = scale*(smallestY + largestY)/2;
-        double dx = image->get_width()/2 - DCx;
-        double dy = image->get_height()/2 -DCy;
-        for(auto i : lines){
-                image->draw_line(dx + scale * (i.x0.x), dy + scale * (i.x0.y),
-                                 dx + scale * (i.x1.x), dy + scale * (i.x1.y), i.color);
+    img::EasyImage* drawLines(const int size, const img::Color backgroundcolor);
 
-        }
 
-        return *image;
-    }
 
 private:
-    std::list<Line2D> lines;
+    std::list<Line2D*> lines;
 };
 
 

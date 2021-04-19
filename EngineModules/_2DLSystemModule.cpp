@@ -86,7 +86,7 @@ _2DLSystemModule::~_2DLSystemModule() {
 
 }
 
-img::EasyImage& _2DLSystemModule::calculateFrame() {
+img::EasyImage* _2DLSystemModule::calculateFrame() {
     return lines.drawLines(size, backgroundcolor);
 }
 
