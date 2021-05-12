@@ -7,7 +7,8 @@
 
 class Face {
 public:
-    std::vector<Vector3D> index_vec;
+    Face(int index0, int index1);
+    std::vector<int> index_vec;
 };
 
 

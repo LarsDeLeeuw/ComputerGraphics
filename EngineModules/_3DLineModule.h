@@ -10,13 +10,16 @@
 class _3DLineModule : public AbstractModule{
 public:
     _3DLineModule(const ini::Configuration &configuration);
-    ~_3DLineModule();
+    ~_3DLineModule() = default;
     img::EasyImage* calculateFrame() override;
 
 private:
     Figures3D figures;
     Vector3D eye_point;
     double scale;
+    int size;
+    img::Color backgroundcolor;
+    Lines2D* lines;
 };
 
 

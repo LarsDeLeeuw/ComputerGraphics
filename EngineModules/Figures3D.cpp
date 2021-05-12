@@ -16,17 +16,23 @@ void Figures3D::applyTransformation(const Matrix &M_T) {
 Lines2D* Figures3D::doProjection(const double d) {
     Lines2D* projected_lines = new Lines2D();
     for(int i = 0; i < figures.size(); i++){
+        std::vector<Point2D*> storage;
+        for(int k = 0; k < figures[i]->getPoints().size(); k++){
+            storage.push_back(::doProjection(figures[i]->getPoints()[k],1));
+        }
         for(int j = 0; j < figures[i]->getFaces().size(); j++){
-            std::vector<Point2D*> storage;
-            for(int k = 0; k < figures[i]->getFaces()[j]->index_vec.size(); k++){
-                storage.push_back(::doProjection(figures[i]->getFaces()[j]->index_vec[k],1));
-            }
-            if(storage.size() == 2){
-                Line2D* new_line = new Line2D(*storage[0], *storage[1], *figures[i]->getColor());
+            if(figures[i]->getFaces()[j].index_vec.size() == 2){
+                Line2D* new_line = new Line2D(*storage[figures[i]->getFaces()[j].index_vec[0]], *storage[figures[i]->getFaces()[j].index_vec[1]], *figures[i]->getColor());
+                projected_lines->addLine(*new_line);
             }
             else{
                 std::cout << "Not implemented yet";
             }
         }
     }
+    return projected_lines;
+}
+
+void Figures3D::addFigure(Figure* newFigure) {
+    figures.push_back(newFigure);
 }

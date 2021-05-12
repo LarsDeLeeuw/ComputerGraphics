@@ -10,7 +10,7 @@ class Figures3D {
 public:
     void applyTransformation(const Matrix& M_T);
     Lines2D* doProjection(const double d = 1);
-
+    void addFigure(Figure* newFigure);
 private:
     std::vector<Figure*> figures;
 };

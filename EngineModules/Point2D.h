@@ -2,6 +2,8 @@
 #define ENGINE_POINT2D_H
 
 
+#include "../ini_configuration.h"
+
 class Point2D {
 public:
     Point2D(double x_input, double y_input){

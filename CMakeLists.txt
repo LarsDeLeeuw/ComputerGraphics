@@ -13,13 +13,12 @@ set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${OWN_GXX_FLAGS}")
 ############################################################
 # List all sources
 ############################################################
-set(engine_sources
-		l_parser.h
-		l_parser.cc
-	easy_image.cc
-	engine.cc
-	ini_configuration.cc
-		EngineModules/AbstractModule.cpp EngineModules/AbstractModule.h EngineModules/_2DLSystemModule.cpp EngineModules/_2DLSystemModule.h EngineModules/Point2D.cpp EngineModules/Point2D.h EngineModules/Line2D.cpp EngineModules/Line2D.h EngineModules/Lines2D.cpp EngineModules/Lines2D.h EngineModules/_3DLineModule.cpp EngineModules/_3DLineModule.h EngineModules/Face.cpp EngineModules/Face.h EngineModules/Figure.cpp EngineModules/Figure.h EngineModules/Figures3D.cpp EngineModules/Figures3D.h EngineModules/MatrixMath.cpp)
+set(engine_sources l_parser.h l_parser.cc easy_image.cc engine.cc
+	ini_configuration.cc vector3d.h vector3d.cc
+		EngineModules/AbstractModule.cpp EngineModules/AbstractModule.h EngineModules/_2DLSystemModule.cpp EngineModules/_2DLSystemModule.h
+		EngineModules/Point2D.cpp EngineModules/Point2D.h EngineModules/Line2D.cpp EngineModules/Line2D.h EngineModules/Lines2D.cpp
+		EngineModules/Lines2D.h EngineModules/_3DLineModule.cpp EngineModules/_3DLineModule.h EngineModules/Face.cpp EngineModules/Face.h
+		EngineModules/Figure.cpp EngineModules/Figure.h EngineModules/Figures3D.cpp EngineModules/Figures3D.h EngineModules/MatrixMath.cpp EngineModules/MatrixMath.h)
 
 ############################################################
 # Create an executable
