@@ -22,6 +22,9 @@ img::EasyImage generate_image(const ini::Configuration &configuration)
         image = *to_destroy;
         delete to_destroy;
     }
+    else if(configuration["General"]["type"].as_string_or_die() == "Wireframe"){
+
+    }
 	return image;
 }
 

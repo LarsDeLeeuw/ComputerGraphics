@@ -19,7 +19,7 @@ set(engine_sources
 	easy_image.cc
 	engine.cc
 	ini_configuration.cc
-		EngineModules/AbstractModule.cpp EngineModules/AbstractModule.h EngineModules/_2DLSystemModule.cpp EngineModules/_2DLSystemModule.h EngineModules/Point2D.cpp EngineModules/Point2D.h EngineModules/Line2D.cpp EngineModules/Line2D.h EngineModules/Lines2D.cpp EngineModules/Lines2D.h EngineModules/_3DLineModule.cpp EngineModules/_3DLineModule.h)
+		EngineModules/AbstractModule.cpp EngineModules/AbstractModule.h EngineModules/_2DLSystemModule.cpp EngineModules/_2DLSystemModule.h EngineModules/Point2D.cpp EngineModules/Point2D.h EngineModules/Line2D.cpp EngineModules/Line2D.h EngineModules/Lines2D.cpp EngineModules/Lines2D.h EngineModules/_3DLineModule.cpp EngineModules/_3DLineModule.h EngineModules/Face.cpp EngineModules/Face.h EngineModules/Figure.cpp EngineModules/Figure.h EngineModules/Figures3D.cpp EngineModules/Figures3D.h EngineModules/MatrixMath.cpp)
 
 ############################################################
 # Create an executable
