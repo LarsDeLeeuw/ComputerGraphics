@@ -7,6 +7,7 @@
 
 class Face {
 public:
+    Face() = default;
     Face(int index0, int index1);
     std::vector<int> index_vec;
 };

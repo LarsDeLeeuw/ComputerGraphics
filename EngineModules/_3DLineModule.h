@@ -16,7 +16,6 @@ public:
 private:
     Figures3D figures;
     Vector3D eye_point;
-    double scale;
     int size;
     img::Color backgroundcolor;
     Lines2D* lines;

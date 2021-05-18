@@ -1,5 +1,8 @@
 #include "Figure.h"
+#define _USE_MATH_DEFINES
+#include <cmath>
 #include <sstream>
+#include "MatrixMath.h"
 
 using namespace std;
 
@@ -28,8 +31,35 @@ Figure::Figure(const ini::Section &configuration) {
         s.str("");
         s << "line" << x;
         auto cache1 = configuration[s.str()].as_int_tuple_or_die();
-        Face newFace = Face(cache1[0], cache1[1]);
+        Face newFace;
+        if(cache1.size() == 2){
+            newFace = Face(cache1[0], cache1[1]);
+        }
+        else{
+            // TODO: Planar Face
+            newFace = Face(cache1[0], cache1[1]);
+        }
+
         faces.push_back(newFace);
     }
+    scale = configuration["scale"].as_double_or_die();
+    // TODO: Figure needs to be centered in (0, 0, 0)
+    Matrix M = scaleFigure(1);
+    if(scale != 1){
+        M = scaleFigure(scale);
+    }
+    x_rot = configuration["rotateX"].as_double_or_die()*(M_PI/180);
+    if(x_rot != 0){
+        M *= rotateX(x_rot);
+    }
+    y_rot = configuration["rotateY"].as_double_or_die()*(M_PI/180);
+    if(y_rot != 0){
+        M *= rotateY(y_rot);
+    }
+    z_rot = configuration["rotateZ"].as_double_or_die()*(M_PI/180);
+    if(z_rot != 0){
+        M *= rotateZ(z_rot);
+    }
+    applyTransformation(M);
 }
 

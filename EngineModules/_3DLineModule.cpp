@@ -13,6 +13,7 @@ _3DLineModule::_3DLineModule(const ini::Configuration &configuration) {
     Matrix transEye = genEyePointTransformation(eye_point);
     int numOfFigures = configuration["General"]["nrFigures"].as_int_or_die();
     stringstream s;
+    // Create every figure.
     for(int x = 0; x < numOfFigures; x++){
         s.str("");
         s << "Figure" << x;
