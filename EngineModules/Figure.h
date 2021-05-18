@@ -17,6 +17,13 @@ public:
     std::vector<Vector3D> getPoints(){return points;}
     img::Color* getColor(){return color;}
 
+    void genCube();
+    void genTetrahedron();
+    void genOctahedron();
+    void genIcosahedron();
+    void genDodecahedron();
+
+
 private:
     std::vector<Vector3D> points;
     std::vector<Face> faces;

@@ -16,7 +16,7 @@ X: Niet werkend of niet geïmplementeerd
 | 2 | Transformaties            | V  |
 |   | Eye-point                 |  V |
 |   | Projectie                 |  V |
-| 3 | Platonische Lichamen      |   |
+| 3 | Platonische Lichamen      |  V |
 |   | Kegel en cylinder         |   |
 |   | Bol                       |   |
 |   | Torus                     |   |
@@ -42,6 +42,7 @@ Geïmplementeerde vorm van texture mapping: ...
 
 ## Gekende problemen 
 Albeelding 4, 6, 7, 8 komen de sizes niet overeen plus soms afbeelding.
+Afbeelding 57 lijkt 1 pixel meer naar schuinboven centreerd te zijn.
 ## Niet-gequoteerde functionaliteit
 ...
 
