@@ -5,7 +5,7 @@ project(engine)
 ############################################################
 # Set compiler flags
 ############################################################
-set(OWN_GXX_FLAGS "-Wall -Wextra -std=c++14")
+set(OWN_GXX_FLAGS " -O3 -Wall -Wextra -std=c++14")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} ${OWN_GXX_FLAGS} -pg -g")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} ${OWN_GXX_FLAGS}")
 set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${OWN_GXX_FLAGS}")
