@@ -25,3 +25,7 @@ Face::Face(int index0, int index1, int index2, int index3, int index4) {
     index_vec.push_back(index3);
     index_vec.push_back(index4);
 }
+
+void Face::addPoint(int index) {
+    index_vec.push_back(index);
+}

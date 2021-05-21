@@ -15,11 +15,10 @@ public:
     ~_2DLSystemModule();
     img::EasyImage* calculateFrame() override;
 private:
-    std::string& getString(const LParser::LSystem2D &LSystem, std::string& replacedstring, int nriterations = 0);
+    void getString(const LParser::LSystem2D &LSystem, std::string& replacedstring, int nriterations = 0);
     double alpha;
     double delta;
     std::set<char> alphabet;
-    std::map<char, bool> drawfunction;
     std::string initiator;
     std::string statement;
     unsigned int iterations;

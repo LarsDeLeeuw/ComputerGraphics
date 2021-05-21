@@ -17,49 +17,25 @@ Lines2D* Figures3D::doProjection(const double d) {
     Lines2D* projected_lines = new Lines2D();
     for(int i = 0; i < figures.size(); i++){
         std::vector<Point2D*> storage;
-        for(int k = 0; k < figures[i]->getPoints().size(); k++){
-            storage.push_back(::doProjection(figures[i]->getPoints()[k],1));
+        auto cachePoints = figures[i]->getPoints();
+        int numPoints = cachePoints.size();
+        for(int k = 0; k < numPoints; k++){
+            storage.push_back(::doProjection(cachePoints[k],d));
         }
-        for(int j = 0; j < figures[i]->getFaces().size(); j++){
-            int k = figures[i]->getFaces()[j].index_vec.size();
+        int numFaces = figures[i]->getFaces().size();
+        auto cacheFaces = figures[i]->getFaces();
+        for(int j = 0; j < numFaces; j++){
+            auto cacheF = cacheFaces[j];
+            int k = cacheF.index_vec.size();
             Line2D* new_line;
-            switch (k) {
-                case 2:
-                    new_line = new Line2D(*storage[figures[i]->getFaces()[j].index_vec[0]], *storage[figures[i]->getFaces()[j].index_vec[1]], *figures[i]->getColor());
+            if(k != 2){
+                for(int j = 0; j < k; j++){
+                    new_line = new Line2D(*storage[cacheF.index_vec[j]], *storage[cacheF.index_vec[(j+1)%k]], *figures[i]->getColor());
                     projected_lines->addLine(*new_line);
-                    break;
-                case 3:
-                    new_line = new Line2D(*storage[figures[i]->getFaces()[j].index_vec[0]], *storage[figures[i]->getFaces()[j].index_vec[1]], *figures[i]->getColor());
-                    projected_lines->addLine(*new_line);
-                    new_line = new Line2D(*storage[figures[i]->getFaces()[j].index_vec[1]], *storage[figures[i]->getFaces()[j].index_vec[2]], *figures[i]->getColor());
-                    projected_lines->addLine(*new_line);
-                    new_line = new Line2D(*storage[figures[i]->getFaces()[j].index_vec[2]], *storage[figures[i]->getFaces()[j].index_vec[0]], *figures[i]->getColor());
-                    projected_lines->addLine(*new_line);
-                    break;
-                case 4:
-                    new_line = new Line2D(*storage[figures[i]->getFaces()[j].index_vec[0]], *storage[figures[i]->getFaces()[j].index_vec[1]], *figures[i]->getColor());
-                    projected_lines->addLine(*new_line);
-                    new_line = new Line2D(*storage[figures[i]->getFaces()[j].index_vec[1]], *storage[figures[i]->getFaces()[j].index_vec[2]], *figures[i]->getColor());
-                    projected_lines->addLine(*new_line);
-                    new_line = new Line2D(*storage[figures[i]->getFaces()[j].index_vec[2]], *storage[figures[i]->getFaces()[j].index_vec[3]], *figures[i]->getColor());
-                    projected_lines->addLine(*new_line);
-                    new_line = new Line2D(*storage[figures[i]->getFaces()[j].index_vec[3]], *storage[figures[i]->getFaces()[j].index_vec[0]], *figures[i]->getColor());
-                    projected_lines->addLine(*new_line);
-                    break;
-                case 5:
-                    new_line = new Line2D(*storage[figures[i]->getFaces()[j].index_vec[0]], *storage[figures[i]->getFaces()[j].index_vec[1]], *figures[i]->getColor());
-                    projected_lines->addLine(*new_line);
-                    new_line = new Line2D(*storage[figures[i]->getFaces()[j].index_vec[1]], *storage[figures[i]->getFaces()[j].index_vec[2]], *figures[i]->getColor());
-                    projected_lines->addLine(*new_line);
-                    new_line = new Line2D(*storage[figures[i]->getFaces()[j].index_vec[2]], *storage[figures[i]->getFaces()[j].index_vec[3]], *figures[i]->getColor());
-                    projected_lines->addLine(*new_line);
-                    new_line = new Line2D(*storage[figures[i]->getFaces()[j].index_vec[3]], *storage[figures[i]->getFaces()[j].index_vec[4]], *figures[i]->getColor());
-                    projected_lines->addLine(*new_line);
-                    new_line = new Line2D(*storage[figures[i]->getFaces()[j].index_vec[4]], *storage[figures[i]->getFaces()[j].index_vec[0]], *figures[i]->getColor());
-                    projected_lines->addLine(*new_line);
-                    break;
-                default:
-                    std::cout << "Not implemented yet";
+                }
+            }else{
+                new_line = new Line2D(*storage[cacheF.index_vec[0]], *storage[cacheF.index_vec[1]], *figures[i]->getColor());
+                projected_lines->addLine(*new_line);
             }
         }
     }

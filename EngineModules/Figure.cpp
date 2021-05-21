@@ -3,6 +3,7 @@
 #include <cmath>
 #include <sstream>
 #include "MatrixMath.h"
+#include "_3DLsystem.h"
 
 using namespace std;
 
@@ -36,7 +37,6 @@ Figure::Figure(const ini::Section &configuration) {
             if (cache1.size() == 2) {
                 newFace = Face(cache1[0], cache1[1]);
             } else {
-                // TODO: Planar Face
                 newFace = Face(cache1[0], cache1[1]);
             }
             faces.push_back(newFace);
@@ -45,14 +45,15 @@ Figure::Figure(const ini::Section &configuration) {
     else if(configuration["type"].as_string_or_die() == "Cube"){
         genCube();
     }
-    else if(configuration["type"].as_string_or_die() == "Cone"){
-
+    else if(configuration["type"].as_string_or_die() == "Sphere"){
+        genSphere(configuration["n"].as_int_or_die());
     }
     else if(configuration["type"].as_string_or_die() == "Cylinder"){
-
+        genCylinder(configuration["n"].as_int_or_die(), configuration["height"].as_double_or_die());
     }
     else if(configuration["type"].as_string_or_die() == "Torus"){
-
+        genTorus(configuration["n"].as_int_or_die(), configuration["m"].as_int_or_die(),
+                 configuration["r"].as_double_or_die(), configuration["R"].as_double_or_die());
     }
     else if(configuration["type"].as_string_or_die() == "Tetrahedron"){
         genTetrahedron();
@@ -66,8 +67,19 @@ Figure::Figure(const ini::Section &configuration) {
     else if(configuration["type"].as_string_or_die() == "Dodecahedron"){
         genDodecahedron();
     }
-    else if(configuration["type"].as_string_or_die() == "Sphere"){
+    else if(configuration["type"].as_string_or_die() == "Cone"){
+        genCone(configuration["n"].as_int_or_die(), configuration["height"].as_double_or_die());
+    }
+    else if(configuration["type"].as_string_or_die() == "3DLSystem"){
+        _3DLsystem LSystem = _3DLsystem(configuration);
+        points = LSystem.getPoints();
+        faces = LSystem.getFaces();
+        int i = points.size();
 
+        cout << endl;
+    }
+    else{
+        cout << "Unknown type defined in Figure segment";
     }
 
     scale = configuration["scale"].as_double_or_die();
@@ -88,6 +100,8 @@ Figure::Figure(const ini::Section &configuration) {
     if(z_rot != 0){
         M *= rotateZ(z_rot);
     }
+    cache = configuration["center"].as_double_tuple_or_die();
+    M *= translate(Vector3D::point(cache[0], cache[1], cache[2]));
     applyTransformation(M);
 }
 
@@ -310,5 +324,131 @@ void Figure::genDodecahedron() {
     faces.push_back(newFace);
     newFace = Face(15, 6, 5, 14, 19);
     faces.push_back(newFace);
+}
+
+void Figure::genSphere(const int n) {
+    genIcosahedron();
+    for(int i = 0; i < n; i++){
+        divideTriangles();
+    }
+    rescalePoints();
+}
+
+void Figure::divideTriangles() {
+    std::vector<Face> moreFaces;
+    // This for loop is not multithread friendly, new points get added to points vector and their index for the faces are calculated with points.size().
+    for(int i = 0; i < faces.size(); i++){
+        int s = points.size();
+        Vector3D A = points[faces[i].index_vec[0]];
+        Vector3D B = points[faces[i].index_vec[1]];
+        Vector3D C = points[faces[i].index_vec[2]];
+        Vector3D D = Vector3D::point((double)(A.x + B.x)/(double)2,(double)(A.y + B.y)/(double)2 ,(double)(A.z + B.z)/(double)2);
+        points.push_back(D);
+        Vector3D E = Vector3D::point((double)(A.x + C.x)/(double)2,(double)(A.y + C.y)/(double)2 ,(double)(A.z + C.z)/(double)2);
+        points.push_back(E);
+        Vector3D F = Vector3D::point((double)(C.x + B.x)/(double)2,(double)(C.y + B.y)/(double)2 ,(double)(C.z + B.z)/(double)2);
+        points.push_back(F);
+        //ADE
+        Face newFace = Face(faces[i].index_vec[0], s, s+1);
+        moreFaces.push_back(newFace);
+        //BFD
+        newFace = Face(faces[i].index_vec[1], s+2, s);
+        moreFaces.push_back(newFace);
+        //CEF
+        newFace = Face(faces[i].index_vec[2], s+1, s+2);
+        moreFaces.push_back(newFace);
+        //DFE
+        newFace = Face(s, s+2, s+1);
+        moreFaces.push_back(newFace);
+    }
+    faces.clear();
+    faces = moreFaces;
+}
+
+void Figure::rescalePoints() {
+    int numPoints = points.size();
+    for(int i = 0; i < numPoints; i++){
+        points[i].normalise();
+    }
+}
+
+void Figure::genCone(const int n, const double h) {
+    points.push_back(Vector3D::point(0, 0, h));
+    points.push_back(Vector3D::point(cos(0), sin(0), 0));
+    Face newFace;
+    for(int i = 1; i < n; i++){
+        points.push_back(Vector3D::point(cos((double)(2*i*M_PI)/(double)n), sin((double)(2*i*M_PI)/(double)n), 0));
+        newFace = Face(i, i+1, 0);
+        faces.push_back(newFace);
+    }
+    faces.push_back(Face(n, 1, 0));
+    newFace = Face();
+    for(int i = 1; i < n+1; i++){
+        newFace.addPoint(i);
+    }
+    faces.push_back(newFace);
+}
+
+void Figure::genCylinder(const int n, const double h) {
+    // All points with an even index (0 included) are part of upper surface.
+
+    // Generate sides.
+    points.push_back(Vector3D::point(cos(0), sin(0), h));
+    points.push_back(Vector3D::point(cos(0), sin(0), 0));
+    Face newFace;
+    int indexRef = 0;
+    for(int i = 1; i < n; i++){
+        points.push_back(Vector3D::point(cos((double)(2*i*M_PI)/(double)n), sin((double)(2*i*M_PI)/(double)n), h));
+        points.push_back(Vector3D::point(cos((double)(2*i*M_PI)/(double)n), sin((double)(2*i*M_PI)/(double)n), 0));
+        newFace = Face(indexRef, indexRef+1,  indexRef+3, indexRef+2);
+        indexRef += 2;
+        faces.push_back(newFace);
+    }
+    faces.push_back(Face(indexRef, indexRef+1, 1, 0));
+
+    // Generate surfaces
+    newFace = Face();
+    Face topFace = Face();
+    for(int i = 0; i < 2*n; i++){
+        if(i%2 == 0){
+            topFace.addPoint(i);
+        }
+        else{
+            newFace.addPoint(i);
+        }
+    }
+    faces.push_back(newFace);
+    faces.push_back(topFace);
+}
+
+void Figure::genTorus(const int n, const int m, const double r, const double R) {
+    // Generates Torus with parameterequation, n is the number of circles the torus is divided in, m are the amount of points per circle.
+    // I first calculate the first circle, then I start the main loop and start calculating the rest of the points, when I calculated the new points
+    // I also create the faces, when I create the faces I also use a loop for every face except the face that connects m-1 to 0.
+    double u = 0;
+    double v = 0;
+    int indexRef = 0;
+    for(int j = 0; j < m; j++){
+        v = (double)(2*j*M_PI)/(double)m;
+        points.push_back(Vector3D::point((R + r* cos(v))*cos(u),(R + r* cos(v))*sin(u), r*sin(v)));
+    }
+    for(int i = 1; i < n; i++){
+        for(int j = 0; j < m; j++){
+            u = (double)(2*i*M_PI)/(double)n;
+            v = (double)(2*j*M_PI)/(double)m;
+            points.push_back(Vector3D::point((R + r* cos(v))*cos(u),(R + r* cos(v))*sin(u), r*sin(v)));
+        }
+        for(int k = 1; k < m; k++){
+            faces.push_back(Face(indexRef, indexRef+1, indexRef+1+m, indexRef+m));
+            indexRef++;
+        }
+        faces.push_back(Face(indexRef, indexRef-m+1, indexRef+1, indexRef+m));
+        indexRef++;
+    }
+    for(int k = 0; k < m-1; k++){
+        faces.push_back(Face(indexRef, indexRef+1, k+1, k));
+        indexRef++;
+    }
+    faces.push_back(Face(indexRef, indexRef-m+1, 0, m-1));
 }
 

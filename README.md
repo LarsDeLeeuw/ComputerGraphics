@@ -12,15 +12,15 @@ X: Niet werkend of niet geïmplementeerd
 |---|---------------------------|---|
 | 1 | 2D L-systemen             |  V |
 |   | Met haakjes               | V  |
-|   | Stochastisch              |   |
+|   | Stochastisch              |  X |
 | 2 | Transformaties            | V  |
 |   | Eye-point                 |  V |
 |   | Projectie                 |  V |
 | 3 | Platonische Lichamen      |  V |
-|   | Kegel en cylinder         |   |
-|   | Bol                       |   |
-|   | Torus                     |   |
-|   | 3D L-systemen             |   |
+|   | Kegel en cylinder         |  V |
+|   | Bol                       | V  |
+|   | Torus                     | V  |
+|   | 3D L-systemen             | V  |
 | 4 | Z-buffering (lijnen)      |   |
 | 5 | Triangulatie              |   |
 |   | Z-buffering (driehoeken)  |   |

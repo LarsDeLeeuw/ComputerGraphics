@@ -61,4 +61,5 @@ Matrix translate(const Vector3D& vector){
     M(4,1) = vector.x;
     M(4,2) = vector.y;
     M(4,3) = vector.z;
+    return M;
 }

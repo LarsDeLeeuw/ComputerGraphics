@@ -26,6 +26,7 @@ double dMod(double x, double y){
 
 _2DLSystemModule::_2DLSystemModule(const ini::Configuration &configuration) {
     std::ifstream lfile;
+    // TODO: Hoe werkt hun filesystem?
     lfile.open("2DLsystems/" + configuration["2DLSystem"]["inputfile"].as_string_or_die());
     LParser::LSystem2D LSystem;
     lfile >> LSystem;
@@ -37,7 +38,9 @@ _2DLSystemModule::_2DLSystemModule(const ini::Configuration &configuration) {
     initiator = LSystem.get_initiator();
     size = configuration["General"]["size"].as_int_or_die();
     backgroundcolor = img::Color(255*configuration["General"]["backgroundcolor"].as_double_tuple_or_die()[0], 255*configuration["General"]["backgroundcolor"].as_double_tuple_or_die()[1], 255*configuration["General"]["backgroundcolor"].as_double_tuple_or_die()[2]);
-    color = img::Color(255*configuration["2DLSystem"]["color"].as_double_tuple_or_die()[0], 255*configuration["2DLSystem"]["color"].as_double_tuple_or_die()[1], 255*configuration["2DLSystem"]["color"].as_double_tuple_or_die()[2]);
+    color = img::Color(255*configuration["2DLSystem"]["color"].as_double_tuple_or_die()[0],
+                       255*configuration["2DLSystem"]["color"].as_double_tuple_or_die()[1],
+                       255*configuration["2DLSystem"]["color"].as_double_tuple_or_die()[2]);
     getString(LSystem, initiator);
     std::stack<std::pair<Point2D, double>> st;
     std::pair<Point2D, double> stor;
@@ -90,10 +93,10 @@ img::EasyImage* _2DLSystemModule::calculateFrame() {
     return lines.drawLines(size, backgroundcolor);
 }
 
-std::string &_2DLSystemModule::getString(const LParser::LSystem2D &LSystem, std::string& replacedstring, int nriterations) {
+void _2DLSystemModule::getString(const LParser::LSystem2D &LSystem, std::string& replacedstring, int nriterations) {
     if(nriterations == iterations){
         statement = replacedstring;
-        return replacedstring;
+        return;
     }
     std::string iteratedstring;
     for(char symbol : replacedstring){

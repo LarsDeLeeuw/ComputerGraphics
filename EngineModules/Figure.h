@@ -10,6 +10,9 @@
 
 class Figure {
 public:
+    void divideTriangles();
+    void rescalePoints();
+
     Figure() = default;
     Figure(const ini::Section &configuration);
     void applyTransformation(const Matrix& M_t);
@@ -23,6 +26,10 @@ public:
     void genIcosahedron();
     void genDodecahedron();
 
+    void genSphere(const int n);
+    void genCone(const int n, const double h);
+    void genCylinder(const int n, const double h);
+    void genTorus(const int n,const int m, const double r,const double R);
 
 private:
     std::vector<Vector3D> points;
