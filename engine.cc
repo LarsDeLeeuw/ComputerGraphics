@@ -29,6 +29,12 @@ img::EasyImage generate_image(const ini::Configuration &configuration)
         image = *to_destroy;
         delete to_destroy;
     }
+    else if(configuration["General"]["type"].as_string_or_die() == "ZBufferedWireframe"){
+        _3DLineModule module = _3DLineModule(configuration, true);
+        to_destroy = module.calculateFrame();
+        image = *to_destroy;
+        delete to_destroy;
+    }
 	return image;
 }
 
@@ -42,7 +48,7 @@ int main(int argc, char const* argv[])
         {
                 std::vector<std::string> args = std::vector<std::string>(argv+1, argv+argc);
                 if (args.empty()) {
-                        std::ifstream fileIn("3DFigure/filelist");
+                        std::ifstream fileIn("ZBufferWireframe/filelist");
                         std::string fileName;
                         while (std::getline(fileIn, fileName)) {
                                 args.push_back(fileName);

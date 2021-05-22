@@ -6,6 +6,7 @@
 #include <chrono>
 
 #include "Line2D.h"
+#include "ZBuffer.h"
 
 class Lines2D{
 public:
@@ -23,7 +24,10 @@ public:
     std::list<Line2D*> getLines(){
         return lines;
     }
-    img::EasyImage* drawLines(const int size, const img::Color backgroundcolor);
+    img::EasyImage* drawLines(const int size, const img::Color backgroundcolor, bool zbuf = false);
+    void draw_zbuf_line(ZBuffer & zbuffer, img::EasyImage & image, unsigned int x0, unsigned int y0,
+            const double z0, unsigned int x1, unsigned int y1,const double z1, const img::Color &color);
+
 
 
 

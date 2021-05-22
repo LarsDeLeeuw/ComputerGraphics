@@ -4,7 +4,7 @@
 
 using namespace std;
 
-_3DLineModule::_3DLineModule(const ini::Configuration &configuration) {
+_3DLineModule::_3DLineModule(const ini::Configuration &configuration, bool zbuf) {
     size = configuration["General"]["size"];
     auto cache = configuration["General"]["eye"].as_double_tuple_or_die();
     eye_point = Vector3D::point(cache[0], cache[1], cache[2]);
@@ -22,9 +22,15 @@ _3DLineModule::_3DLineModule(const ini::Configuration &configuration) {
     }
     figures.applyTransformation(transEye);
     lines = figures.doProjection();
+    fZbuf = zbuf;
 }
 
 img::EasyImage *_3DLineModule::calculateFrame() {
-    return lines->drawLines(size, backgroundcolor);
+    if(!fZbuf){
+        return lines->drawLines(size, backgroundcolor);
+    }
+    else{
+        return lines->drawLines(size, backgroundcolor, true);
+    }
 }
 

@@ -13,7 +13,7 @@ void Figure::applyTransformation(const Matrix &M_t) {
     }
 }
 
-Figure::Figure(const ini::Section &configuration) {
+Figure::Figure(const ini::Section &configuration, bool zbuf) {
     auto cache = configuration["color"].as_double_tuple_or_die();
     color = new img::Color(cache[0]*255, cache[1]*255, cache[2]*255);
     if(configuration["type"].as_string_or_die() == "LineDrawing") {

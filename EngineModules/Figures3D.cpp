@@ -30,11 +30,11 @@ Lines2D* Figures3D::doProjection(const double d) {
             Line2D* new_line;
             if(k != 2){
                 for(int j = 0; j < k; j++){
-                    new_line = new Line2D(*storage[cacheF.index_vec[j]], *storage[cacheF.index_vec[(j+1)%k]], *figures[i]->getColor());
+                    new_line = new Line2D(*storage[cacheF.index_vec[j]], *storage[cacheF.index_vec[(j+1)%k]], *figures[i]->getColor(), cachePoints[cacheF.index_vec[j]].z, cachePoints[cacheF.index_vec[(j+1)%k]].z);
                     projected_lines->addLine(*new_line);
                 }
             }else{
-                new_line = new Line2D(*storage[cacheF.index_vec[0]], *storage[cacheF.index_vec[1]], *figures[i]->getColor());
+                new_line = new Line2D(*storage[cacheF.index_vec[0]], *storage[cacheF.index_vec[1]], *figures[i]->getColor(), cachePoints[cacheF.index_vec[0]].z, cachePoints[cacheF.index_vec[1]].z);
                 projected_lines->addLine(*new_line);
             }
         }

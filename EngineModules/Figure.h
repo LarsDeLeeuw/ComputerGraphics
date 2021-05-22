@@ -14,7 +14,7 @@ public:
     void rescalePoints();
 
     Figure() = default;
-    Figure(const ini::Section &configuration);
+    Figure(const ini::Section &configuration, bool zbuf = false);
     void applyTransformation(const Matrix& M_t);
     std::vector<Face> getFaces(){return faces;}
     std::vector<Vector3D> getPoints(){return points;}
