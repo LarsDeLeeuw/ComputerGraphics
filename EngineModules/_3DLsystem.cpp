@@ -10,8 +10,7 @@
 
 _3DLsystem::_3DLsystem(const ini::Section &configuration) {
     std::ifstream lfile;
-    // TODO: Hoe werkt hun filesystem?
-    lfile.open("3DFigure/" + configuration["inputfile"].as_string_or_die());
+    lfile.open(configuration["inputfile"].as_string_or_die());
     LParser::LSystem3D LSystem;
     lfile >> LSystem;
     lfile.close();

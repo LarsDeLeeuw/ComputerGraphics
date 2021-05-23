@@ -12,21 +12,20 @@ img::EasyImage* Lines2D::drawLines(const int size, const img::Color backgroundco
         img::EasyImage* image = new img::EasyImage();
         return image;
     }
-    auto start = std::chrono::high_resolution_clock::now();
-    Line2D* temp = *(lines.begin());
-    double largestX = temp->x1->x;
-    double smallestX = temp->x0->x;
-    double largestY = temp->x1->y;
-    double smallestY = temp->x0->y;
+    Line2D temp = *(lines.begin());
+    double largestX = temp.x1.x;
+    double smallestX = temp.x0.x;
+    double largestY = temp.x1.y;
+    double smallestY = temp.x0.y;
     for(auto i: lines){
-        if(i->x0->x < smallestX)smallestX = i->x0->x;
-        if(i->x1->x < smallestX)smallestX = i->x1->x;
-        if(i->x0->y < smallestY)smallestY = i->x0->y;
-        if(i->x1->y < smallestY)smallestY = i->x1->y;
-        if(i->x0->x > largestX)largestX = i->x0->x;
-        if(i->x1->x > largestX)largestX = i->x1->x;
-        if(i->x0->y > largestY)largestY = i->x0->y;
-        if(i->x1->y > largestY)largestY = i->x1->y;
+        if(i.x0.x < smallestX)smallestX = i.x0.x;
+        if(i.x1.x < smallestX)smallestX = i.x1.x;
+        if(i.x0.y < smallestY)smallestY = i.x0.y;
+        if(i.x1.y < smallestY)smallestY = i.x1.y;
+        if(i.x0.x > largestX)largestX = i.x0.x;
+        if(i.x1.x > largestX)largestX = i.x1.x;
+        if(i.x0.y > largestY)largestY = i.x0.y;
+        if(i.x1.y > largestY)largestY = i.x1.y;
     }
     double xrange = std::fabs(largestX) + std::fabs(smallestX); double yrange = std::fabs(largestY) + std::fabs(smallestY);
     img::EasyImage* image = new img::EasyImage(size*((xrange)/std::max(xrange, yrange)), size*((yrange)/std::max(xrange, yrange)), backgroundcolor);
@@ -38,22 +37,20 @@ img::EasyImage* Lines2D::drawLines(const int size, const img::Color backgroundco
     ZBuffer* zbuffer = new ZBuffer(image->get_width(), image->get_height());
     if(!zbuf){
         for(auto i : lines){
-            image->draw_line(roundToInt(dx + scale * (i->x0->x)), roundToInt(dy + scale * (i->x0->y)),
-                             roundToInt(dx + scale * (i->x1->x)), roundToInt(dy + scale * (i->x1->y)), i->color);
+            image->draw_line(roundToInt(dx + scale * (i.x0.x)), roundToInt(dy + scale * (i.x0.y)),
+                             roundToInt(dx + scale * (i.x1.x)), roundToInt(dy + scale * (i.x1.y)), i.color);
 
         }
     }
     else{
         for(auto i : lines){
-            draw_zbuf_line(*zbuffer, *image, roundToInt(dx + scale * (i->x0->x)), roundToInt(dy + scale * (i->x0->y)), i->z1,
-                           roundToInt(dx + scale * (i->x1->x)), roundToInt(dy + scale * (i->x1->y)), i->z2, i->color);
+            draw_zbuf_line(*zbuffer, *image, roundToInt(dx + scale * (i.x0.x)), roundToInt(dy + scale * (i.x0.y)), i.z1,
+                           roundToInt(dx + scale * (i.x1.x)), roundToInt(dy + scale * (i.x1.y)), i.z2, i.color);
 
         }
     }
-    auto stop = std::chrono::high_resolution_clock::now();
-    auto duration = std::chrono::duration_cast<std::chrono::milliseconds >(stop - start);
 
-    std::cout << "Actual drawing time: " << duration.count() << "ms\n"<< "Number of lines drawn: " << lines.size() << "\n"<<std::endl;
+    std::cout << "Number of lines drawn: " << lines.size() << "\n"<<std::endl;
 
     std::cout.flush();
     delete zbuffer;

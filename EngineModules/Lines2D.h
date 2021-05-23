@@ -14,14 +14,12 @@ public:
 
     }
     ~Lines2D(){
-        for(auto i: lines){
-            delete i;
-        }
+
     }
     void addLine(Line2D& newLine){
-        lines.push_back(&newLine);
+        lines.push_back(newLine);
     }
-    std::list<Line2D*> getLines(){
+    std::list<Line2D> getLines(){
         return lines;
     }
     img::EasyImage* drawLines(const int size, const img::Color backgroundcolor, bool zbuf = false);
@@ -32,7 +30,7 @@ public:
 
 
 private:
-    std::list<Line2D*> lines;
+    std::list<Line2D> lines;
 };
 
 

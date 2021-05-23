@@ -26,8 +26,7 @@ double dMod(double x, double y){
 
 _2DLSystemModule::_2DLSystemModule(const ini::Configuration &configuration) {
     std::ifstream lfile;
-    // TODO: Hoe werkt hun filesystem?
-    lfile.open("2DLsystems/" + configuration["2DLSystem"]["inputfile"].as_string_or_die());
+    lfile.open( configuration["2DLSystem"]["inputfile"].as_string_or_die());
     LParser::LSystem2D LSystem;
     lfile >> LSystem;
     lfile.close();

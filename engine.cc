@@ -54,7 +54,7 @@ int main(int argc, char const* argv[])
         {
                 std::vector<std::string> args = std::vector<std::string>(argv+1, argv+argc);
                 if (args.empty()) {
-                        std::ifstream fileIn("3DFractals/filelist");
+                        std::ifstream fileIn("filelist");
                         std::string fileName;
                         while (std::getline(fileIn, fileName)) {
                                 args.push_back(fileName);
@@ -75,8 +75,13 @@ int main(int argc, char const* argv[])
                                 retVal = 1;
                                 continue;
                         }
+                        auto start3 = std::chrono::high_resolution_clock::now();
 
                         img::EasyImage image = generate_image(conf);
+                        auto stop3 = std::chrono::high_resolution_clock::now();
+                        auto duration3 = std::chrono::duration_cast<std::chrono::milliseconds >(stop3 - start3);
+
+                        std::cout << "Image defined in '"<< fileName << "' was rendered in: "<< duration3.count() << "ms." << std::endl;
                         if(image.get_height() > 0 && image.get_width() > 0)
                         {
                                 std::string::size_type pos = fileName.rfind('.');
@@ -120,6 +125,6 @@ int main(int argc, char const* argv[])
         auto stop = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::milliseconds >(stop - start);
 
-        std::cout << duration.count() << std::endl;
+        std::cout << "System runtime: "<< duration.count() << "ms." << std::endl;
         return retVal;
 }

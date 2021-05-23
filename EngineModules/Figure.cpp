@@ -519,9 +519,9 @@ void Figure::triangulate() {
 void Figure::draw_zbuf_triangles(ZBuffer &zbuffer, img::EasyImage &image, double d, double dx, double dy) {
     for(int w = 0; w < faces.size();w++){
         draw_zbuf_triag(zbuffer, image, faces[w].index_vec[0], faces[w].index_vec[1], faces[w].index_vec[2], d, dx, dy);
-        img::Color* newcolor = new img::Color(ddMod(color->red+20, 130) + 30, ddMod(color->green+20, 130) + 30, ddMod(color->blue+20, 130) + 30);
-        delete color;
-        color = newcolor;
+//        img::Color* newcolor = new img::Color(ddMod(color->red+20, 130) + 30, ddMod(color->green+20, 130) + 30, ddMod(color->blue+20, 130) + 30);
+//        delete color;
+//        color = newcolor;
     }
 }
 

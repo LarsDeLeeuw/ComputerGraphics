@@ -28,10 +28,10 @@ X: Niet werkend of niet geïmplementeerd
 |   | BuckyBall                 |   X|
 |   | Mengerspons               | X  |
 |   | View Frustum              |  X|
-| 7 | Ambient licht             |   |
-|   | Diffuus licht (oneindig)  |   |
-|   | Diffuus licht (puntbron)  |   |
-|   | Speculair licht           |   |
+| 7 | Ambient licht             |   X|
+|   | Diffuus licht (oneindig)  |  X|
+|   | Diffuus licht (puntbron)  |  X|
+|   | Speculair licht           |  X|
 | 8 | Schaduw                   | X  |
 |   | Texture mapping           |  X |
 | 9 | Bollen en cylinders       |  X |
@@ -41,8 +41,7 @@ X: Niet werkend of niet geïmplementeerd
 Geïmplementeerde vorm van texture mapping: ...
 
 ## Gekende problemen 
-Albeelding 4, 6, 7, 8 komen de sizes niet overeen plus soms afbeelding.
-Afbeelding 57 lijkt 1 pixel meer naar schuinboven centreerd te zijn.
+
 ## Niet-gequoteerde functionaliteit
 Indien u mijn ZBuffering beter wilt uit testen kan u in het Figure.cpp bestand in
 

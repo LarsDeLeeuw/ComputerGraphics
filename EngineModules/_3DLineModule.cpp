@@ -34,10 +34,10 @@ _3DLineModule::_3DLineModule(const ini::Configuration &configuration, bool zbuf,
 
 img::EasyImage *_3DLineModule::calculateFrame() {
     if(!fZbuf && !fTriangulate){
-        return lines->drawLines(size, backgroundcolor);
+        return lines.drawLines(size, backgroundcolor);
     }
     else if(fZbuf && !fTriangulate){
-        return lines->drawLines(size, backgroundcolor, true);
+        return lines.drawLines(size, backgroundcolor, true);
     }
     else{
         return draw_zbuf_triangles(size, backgroundcolor);

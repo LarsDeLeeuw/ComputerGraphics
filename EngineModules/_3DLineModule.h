@@ -19,7 +19,7 @@ private:
     img::EasyImage* draw_zbuf_triangles(const int size, const img::Color backgroundcolor);
     int size;
     img::Color backgroundcolor;
-    Lines2D* lines;
+    Lines2D lines;
     bool fZbuf = false;
     bool fTriangulate = false;
 };
