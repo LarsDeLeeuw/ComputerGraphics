@@ -37,6 +37,8 @@ public:
     void genCone(const int n, const double h);
     void genCylinder(const int n, const double h);
     void genTorus(const int n,const int m, const double r,const double R);
+    void genBuckyball();
+    void genMengerSponge(const int nr_iterations);
 
 private:
     std::vector<Vector3D> points;

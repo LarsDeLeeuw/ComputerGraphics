@@ -25,8 +25,8 @@ X: Niet werkend of niet geïmplementeerd
 | 5 | Triangulatie              |  V |
 |   | Z-buffering (driehoeken)  | V  |
 | 6 | 3D fractalen              |  V |
-|   | BuckyBall                 |   |
-|   | Mengerspons               |   |
+|   | BuckyBall                 |   X|
+|   | Mengerspons               | X  |
 |   | View Frustum              |  X|
 | 7 | Ambient licht             |   |
 |   | Diffuus licht (oneindig)  |   |
@@ -44,7 +44,10 @@ Geïmplementeerde vorm van texture mapping: ...
 Albeelding 4, 6, 7, 8 komen de sizes niet overeen plus soms afbeelding.
 Afbeelding 57 lijkt 1 pixel meer naar schuinboven centreerd te zijn.
 ## Niet-gequoteerde functionaliteit
-Indien u mijn ZBuffering beter wilt uit testen kan u in het Figure.cpp bestand in Figure::draw_zbuf_triangles(ZBuffer &zbuffer, img::EasyImage &image, double d, double dx, double dy),
+Indien u mijn ZBuffering beter wilt uit testen kan u in het Figure.cpp bestand in
+
+**Figure::draw_zbuf_triangles(ZBuffer &zbuffer, img::EasyImage &image, double d, double dx, double dy)**,
+
 de 3 regels code uncommenten, hierdoor worden de vlakken in afwisselende kleuren getoond.
 ## Extra functionaliteit, niet in de opgaves beschreven
 ...

@@ -592,12 +592,12 @@ void Figure::draw_zbuf_triag(ZBuffer &zbuffer, img::EasyImage &image, int indexA
     }
 }
 
-void Figure::generateFractal(const int nr_iterations, const double scale) {
+void Figure::generateFractal(const int nr_iterations, const double fracscale) {
     vector<vector<Face> > subfigures;
     subfigures.push_back(faces);
     vector<vector<Vector3D> > subpoints;
     subpoints.push_back(points);
-    Matrix scaleMatrix = scaleFigure(1/scale);
+    Matrix scaleMatrix = scaleFigure(1/fracscale);
     for(int i = 0; i < nr_iterations; i++){
         vector<vector<Face> > newSubFigures;
         vector<vector<Vector3D> > newSubPoints;
@@ -636,5 +636,13 @@ void Figure::generateFractal(const int nr_iterations, const double scale) {
         }
         indexRef += subpointSize;
     }
+}
+
+void Figure::genBuckyball() {
+
+}
+
+void Figure::genMengerSponge(const int nr_iterations) {
+
 }
 
