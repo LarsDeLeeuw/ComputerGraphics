@@ -6,6 +6,7 @@
 #include "Face.h"
 #include "../easy_image.h"
 #include "../ini_configuration.h"
+#include "ZBuffer.h"
 
 
 class Figure {
@@ -19,6 +20,9 @@ public:
     std::vector<Face> getFaces(){return faces;}
     std::vector<Vector3D> getPoints(){return points;}
     img::Color* getColor(){return color;}
+    void triangulate();
+    void draw_zbuf_triangles(ZBuffer& zbuffer, img::EasyImage& image, double d, double dx, double dy);
+    void draw_zbuf_triag(ZBuffer& zbuffer, img::EasyImage& image, int indexA, int indexB, int indexC, double d, double dx, double dy);
 
     void genCube();
     void genTetrahedron();

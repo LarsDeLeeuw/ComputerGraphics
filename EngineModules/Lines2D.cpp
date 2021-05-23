@@ -56,6 +56,7 @@ img::EasyImage* Lines2D::drawLines(const int size, const img::Color backgroundco
     std::cout << "Actual drawing time: " << duration.count() << "ms\n"<< "Number of lines drawn: " << lines.size() << "\n"<<std::endl;
 
     std::cout.flush();
+    delete zbuffer;
 
     return image;
 }

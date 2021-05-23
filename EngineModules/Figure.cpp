@@ -2,10 +2,37 @@
 #define _USE_MATH_DEFINES
 #include <cmath>
 #include <sstream>
+#include <limits>
 #include "MatrixMath.h"
 #include "_3DLsystem.h"
+#include "Point2D.h"
 
 using namespace std;
+
+inline int roundToInt(double d)
+{
+    return static_cast<int>(std::round(d));
+}
+
+double ddMod(double x, double y){
+    // Small function that returns mod of doubles, with y > 0.
+    if(x <= 0){
+        x *= -1;
+        if(x < y)return -1*x;
+        else if (x == y)return 0;
+        else{
+            return -1*(x - (int)(x/y)*y);
+        }
+    }else{
+        if(x < y)return x;
+        else if (x == y)return 0;
+        else{
+            return (x - (int)(x/y)*y);
+        }
+    }
+}
+
+
 
 void Figure::applyTransformation(const Matrix &M_t) {
     for(int i = 0; i < points.size(); i++){
@@ -154,6 +181,7 @@ void Figure::genCube() {
     newFace = Face(6, 2, 7, 3);
     faces.push_back(newFace);
     newFace = Face(0, 5, 1, 4);
+    faces.push_back(newFace);
 }
 
 void Figure::genOctahedron() {
@@ -450,5 +478,98 @@ void Figure::genTorus(const int n, const int m, const double r, const double R) 
         indexRef++;
     }
     faces.push_back(Face(indexRef, indexRef-m+1, 0, m-1));
+}
+
+void Figure::triangulate() {
+    vector<Face> newFaces;
+    for(auto face : faces){
+        vector<int> indexVecCache = face.index_vec;
+        int faceSize = indexVecCache.size();
+        if(faceSize > 3){
+            for(int i = 1; i <= faceSize-2; i++){
+                   newFaces.push_back(Face(indexVecCache[0], indexVecCache[i], indexVecCache[i+1]));
+            }
+        }
+        else{
+            newFaces.push_back(face);
+        }
+    }
+    faces = newFaces;
+}
+
+void Figure::draw_zbuf_triangles(ZBuffer &zbuffer, img::EasyImage &image, double d, double dx, double dy) {
+    for(int w = 0; w < faces.size();w++){
+        draw_zbuf_triag(zbuffer, image, faces[w].index_vec[0], faces[w].index_vec[1], faces[w].index_vec[2], d, dx, dy);
+//        img::Color* newcolor = new img::Color(ddMod(color->red+20, 130) + 30, ddMod(color->green+20, 130) + 30, ddMod(color->blue+20, 130) + 30);
+//        delete color;
+//        color = newcolor;
+    }
+}
+
+void Figure::draw_zbuf_triag(ZBuffer &zbuffer, img::EasyImage &image, int indexA, int indexB, int indexC, double d, double dx, double dy) {
+    Point2D projA = Point2D((d*(points[indexA].x))/(-1*(points[indexA].z)) + dx, (d*(points[indexA].y))/(-1*(points[indexA].z)) + dy);
+    Point2D projB = Point2D((d*(points[indexB].x))/(-1*(points[indexB].z)) + dx, (d*(points[indexB].y))/(-1*(points[indexB].z)) + dy);
+    Point2D projC = Point2D((d*(points[indexC].x))/(-1*(points[indexC].z)) + dx, (d*(points[indexC].y))/(-1*(points[indexC].z)) + dy);
+    int yMin = roundToInt(std::min(std::min(projA.y, projB.y), projC.y) + 0.5);
+    int yMax = roundToInt(std::max(std::max(projA.y, projB.y), projC.y) - 0.5);
+    double xG = (projA.x + projB.x + projC.x)/(double)3;
+    double yG = (projA.y + projB.y + projC.y)/(double)3;
+    double zG = 1/(3*points[indexA].z) + 1/(3*points[indexB].z) + 1/(3*points[indexC].z);
+    Vector3D u = Vector3D::point(points[indexB].x - points[indexA].x,
+                                 points[indexB].y - points[indexA].y,
+                                 points[indexB].z - points[indexA].z);
+    Vector3D v = Vector3D::point(points[indexC].x - points[indexA].x,
+                                 points[indexC].y - points[indexA].y,
+                                 points[indexC].z - points[indexA].z);
+    Vector3D w = Vector3D::point(u.y*v.z - u.z*v.y,
+                                 u.z*v.x - u.x*v.z,
+                                 u.x*v.y - u.y*v.x);
+    double kval = points[indexA].x*w.x + points[indexA].y*w.y + points[indexA].z*w.z;
+
+//    Vector3D u = points[indexB] - points[indexA];
+//    Vector3D v = points[indexC] - points[indexA];
+//    Vector3D w = u.cross_equals(v);
+//    double kval = w.dot(points[indexA]);
+
+    for(int i = yMin; i <= yMax; i++){
+        int numOfSuccesTest = 0;
+        double xLAB = std::numeric_limits<double>::infinity();
+        double xLAC = std::numeric_limits<double>::infinity();
+        double xLBC = std::numeric_limits<double>::infinity();
+        double xRAB = -std::numeric_limits<double>::infinity();
+        double xRAC = -std::numeric_limits<double>::infinity();
+        double xRBC = -std::numeric_limits<double>::infinity();
+        int xL = 0;
+        int xR = 0;
+        if((i-projA.y)*(i-projB.y) <= 0 && projA.y != projB.y){
+            xLAB = projB.x + (projA.x - projB.x)*((i-projB.y)/(projA.y - projB.y));
+            xRAB = xLAB;
+            numOfSuccesTest++;
+        }
+        if((i-projA.y)*(i-projC.y) <= 0 && projA.y != projC.y){
+            xLAC = projC.x + (projA.x - projC.x)*((i-projC.y)/(projA.y - projC.y));
+            xRAC = xLAC;
+            numOfSuccesTest++;
+        }
+        if((i-projC.y)*(i-projB.y) <= 0 && projC.y != projB.y) {
+            xLBC = projC.x + (projB.x - projC.x)*((i-projC.y)/(projB.y - projC.y));
+            xRBC = xLBC;
+            numOfSuccesTest++;
+        }
+        if(numOfSuccesTest == 2){
+            xL = roundToInt(std::min(std::min(xLAB, xLAC), xLBC) + 0.5);
+            xR = roundToInt(std::max(std::max(xRAB, xRAC), xRBC) - 0.5);
+            for (int k = xL; k <= xR; k++)
+            {
+                int x = roundToInt(k);
+                int y = roundToInt(i);
+                double zval = 1.0001*zG + (x - xG)*((w.x)/(-d*kval)) + (y - yG)*((w.y)/(-d*kval));
+                if(zbuffer.getValue(x, y) > zval){
+                    image(x, y) = *color;
+                    zbuffer.setValue(x, y, zval);
+                }
+            }
+        }
+    }
 }
 

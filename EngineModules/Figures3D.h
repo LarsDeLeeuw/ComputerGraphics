@@ -11,6 +11,9 @@ public:
     void applyTransformation(const Matrix& M_T);
     Lines2D* doProjection(const double d = 1);
     void addFigure(Figure* newFigure);
+    void triangulateFigures();
+    img::EasyImage* draw_zbuf_triangles(const int size, const img::Color backgroundcolor);
+
 private:
     std::vector<Figure*> figures;
 };

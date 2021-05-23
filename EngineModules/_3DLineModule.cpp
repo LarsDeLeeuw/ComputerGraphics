@@ -4,7 +4,7 @@
 
 using namespace std;
 
-_3DLineModule::_3DLineModule(const ini::Configuration &configuration, bool zbuf) {
+_3DLineModule::_3DLineModule(const ini::Configuration &configuration, bool zbuf, bool triangulate) {
     size = configuration["General"]["size"];
     auto cache = configuration["General"]["eye"].as_double_tuple_or_die();
     eye_point = Vector3D::point(cache[0], cache[1], cache[2]);
@@ -20,17 +20,33 @@ _3DLineModule::_3DLineModule(const ini::Configuration &configuration, bool zbuf)
         Figure* newFigure = new Figure(configuration[s.str()]);
         figures.addFigure(newFigure);
     }
-    figures.applyTransformation(transEye);
-    lines = figures.doProjection();
+    if(!triangulate){
+        figures.applyTransformation(transEye);
+        lines = figures.doProjection();
+    }
+    else{
+        figures.triangulateFigures();
+        figures.applyTransformation(transEye);
+    }
     fZbuf = zbuf;
+    fTriangulate = triangulate;
 }
 
 img::EasyImage *_3DLineModule::calculateFrame() {
-    if(!fZbuf){
+    if(!fZbuf && !fTriangulate){
         return lines->drawLines(size, backgroundcolor);
     }
-    else{
+    else if(fZbuf && !fTriangulate){
         return lines->drawLines(size, backgroundcolor, true);
     }
+    else{
+        return draw_zbuf_triangles(size, backgroundcolor);
+    }
+
 }
+
+img::EasyImage *_3DLineModule::draw_zbuf_triangles(const int size, const img::Color backgroundcolor) {
+    return figures.draw_zbuf_triangles(size, backgroundcolor);
+}
+
 
