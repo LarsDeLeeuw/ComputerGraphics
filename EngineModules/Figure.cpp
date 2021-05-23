@@ -105,12 +105,31 @@ Figure::Figure(const ini::Section &configuration, bool zbuf) {
 
         cout << endl;
     }
+    else if(configuration["type"].as_string_or_die() == "FractalCube"){
+        genCube();
+        generateFractal(configuration["nrIterations"].as_int_or_die(), configuration["fractalScale"].as_double_or_die());
+    }
+    else if(configuration["type"].as_string_or_die() == "FractalTetrahedron"){
+        genTetrahedron();
+        generateFractal(configuration["nrIterations"].as_int_or_die(), configuration["fractalScale"].as_double_or_die());
+    }
+    else if(configuration["type"].as_string_or_die() == "FractalOctahedron"){
+        genOctahedron();
+        generateFractal(configuration["nrIterations"].as_int_or_die(), configuration["fractalScale"].as_double_or_die());
+    }
+    else if(configuration["type"].as_string_or_die() == "FractalIcosahedron"){
+        genIcosahedron();
+        generateFractal(configuration["nrIterations"].as_int_or_die(), configuration["fractalScale"].as_double_or_die());
+    }
+    else if(configuration["type"].as_string_or_die() == "FractalDodecahedron"){
+        genDodecahedron();
+        generateFractal(configuration["nrIterations"].as_int_or_die(), configuration["fractalScale"].as_double_or_die());
+    }
     else{
         cout << "Unknown type defined in Figure segment";
     }
 
     scale = configuration["scale"].as_double_or_die();
-    // TODO: Figure needs to be centered in (0, 0, 0)
     Matrix M = scaleFigure(1);
     if(scale != 1){
         M = scaleFigure(scale);
@@ -500,9 +519,9 @@ void Figure::triangulate() {
 void Figure::draw_zbuf_triangles(ZBuffer &zbuffer, img::EasyImage &image, double d, double dx, double dy) {
     for(int w = 0; w < faces.size();w++){
         draw_zbuf_triag(zbuffer, image, faces[w].index_vec[0], faces[w].index_vec[1], faces[w].index_vec[2], d, dx, dy);
-//        img::Color* newcolor = new img::Color(ddMod(color->red+20, 130) + 30, ddMod(color->green+20, 130) + 30, ddMod(color->blue+20, 130) + 30);
-//        delete color;
-//        color = newcolor;
+        img::Color* newcolor = new img::Color(ddMod(color->red+20, 130) + 30, ddMod(color->green+20, 130) + 30, ddMod(color->blue+20, 130) + 30);
+        delete color;
+        color = newcolor;
     }
 }
 
@@ -570,6 +589,52 @@ void Figure::draw_zbuf_triag(ZBuffer &zbuffer, img::EasyImage &image, int indexA
                 }
             }
         }
+    }
+}
+
+void Figure::generateFractal(const int nr_iterations, const double scale) {
+    vector<vector<Face> > subfigures;
+    subfigures.push_back(faces);
+    vector<vector<Vector3D> > subpoints;
+    subpoints.push_back(points);
+    Matrix scaleMatrix = scaleFigure(1/scale);
+    for(int i = 0; i < nr_iterations; i++){
+        vector<vector<Face> > newSubFigures;
+        vector<vector<Vector3D> > newSubPoints;
+        for(int numOfFigures = 0; numOfFigures < subpoints.size(); numOfFigures++){
+            for(int point = 0; point < subpoints[numOfFigures].size(); point++){
+                Vector3D projP = subpoints[numOfFigures][point] * scaleMatrix;
+                Matrix translateMatrix = translate(subpoints[numOfFigures][point]-projP);
+                newSubFigures.push_back(subfigures[numOfFigures]);
+                vector<Vector3D> temphold;
+                for(int pointToProject = 0; pointToProject < subpoints[numOfFigures].size(); pointToProject++){
+                    Vector3D tempVec = subpoints[numOfFigures][pointToProject]*scaleMatrix*translateMatrix;
+                    temphold.push_back(tempVec);
+                }
+                newSubPoints.push_back(temphold);
+            }
+        }
+        subfigures = newSubFigures;
+        subpoints = newSubPoints;
+    }
+    points.clear();
+    faces.clear();
+    int indexRef = 0;
+    for(int i = 0; i < subpoints.size(); i++){
+        int subpointSize = subpoints[i].size();
+        for(int j = 0; j < subpointSize ; j++){
+            points.push_back(subpoints[i][j]);
+        }
+        int subfigureSize = subfigures[i].size();
+        for(int j = 0; j < subfigureSize; j++){
+            Face newFace = Face();
+            vector<int> indexVecCache = subfigures[i][j].index_vec;
+            for(int index = 0; index < indexVecCache.size(); index++){
+                newFace.addPoint(indexVecCache[index] + indexRef);
+            }
+            faces.push_back(newFace);
+        }
+        indexRef += subpointSize;
     }
 }
 

@@ -55,6 +55,10 @@ void Figures3D::triangulateFigures() {
 img::EasyImage* Figures3D::draw_zbuf_triangles(const int size, const img::Color backgroundcolor) {
     Lines2D* lines2d = doProjection();
     std::list<Line2D*> lines = lines2d->getLines();
+    if(lines.size() == 0){
+        std::cout << "There were no lines projected." << std::endl;
+        return new img::EasyImage();
+    }
     Line2D* temp = *(lines.begin());
     double largestX = temp->x1->x;
     double smallestX = temp->x0->x;
